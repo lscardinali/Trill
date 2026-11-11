@@ -81,28 +81,6 @@ Requirements: Android Studio (or JDK 17+) and the Android SDK.
 ./gradlew :app:assembleDebug
 ```
 
-Release builds are minified and signed with the key provided through environment variables (see below). Without them they fall back to the debug key.
-
-```bash
-./gradlew :app:assembleRelease -Ptrill.versionName=1.2.3 -Ptrill.versionCode=7
-```
-
-## Releasing (maintainers)
-
-Releases are built by GitHub Actions ([`.github/workflows/release.yml`](.github/workflows/release.yml)):
-
-- **Push a tag** like `v1.2.0`, **or** run the *Release* workflow manually from the Actions tab and type a version (it creates the tag for you).
-- The workflow builds a signed release APK, creates the GitHub Release with generated release notes, and attaches `trill-<version>.apk`, which is what Obtainium installs.
-
-One-time setup: add these **repository secrets** (*Settings → Secrets and variables → Actions*):
-
-| Secret | Value |
-|---|---|
-| `TRILL_KEYSTORE_BASE64` | The release keystore (`.p12`), base64-encoded |
-| `TRILL_KEYSTORE_PASSWORD` | The keystore/key password |
-
-> Every release must be signed with the **same** key, or Android/Obtainium will refuse to update the installed app. Keep a backup of the keystore.
-
 ## How it works
 
 - **Search & streams**: [NewPipe Extractor](https://github.com/TeamNewPipe/NewPipeExtractor) (no API key, no Google services).
