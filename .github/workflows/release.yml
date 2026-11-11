@@ -93,8 +93,9 @@ jobs:
 
       - name: Verify APK signature
         run: |
-          APKSIGNER=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
-          "$APKSIGNER" verify --print-certs "dist/trill-${{ steps.version.outputs.version }}.apk" | grep -E "Signer #1 certificate (DN|SHA-256)"
+          APKSIGNER=$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -1)
+          echo "Using $APKSIGNER"
+          "$APKSIGNER" verify --verbose --print-certs "dist/trill-${{ steps.version.outputs.version }}.apk"
 
       - name: Write release notes header
         run: |
