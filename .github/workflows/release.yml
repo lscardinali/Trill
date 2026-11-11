@@ -1,0 +1,122 @@
+name: Release
+
+# Builds a signed APK and publishes it as a GitHub Release (which Obtainium installs from).
+# Trigger it either by pushing a tag like `v1.2.0`, or from the Actions tab with a version
+# number (the tag is then created for you).
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Version to release (e.g. 1.2.0). A tag v<version> is created."
+        required: true
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Resolve version
+        id: version
+        shell: bash
+        run: |
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            RAW="${{ github.event.inputs.version }}"
+          else
+            RAW="${GITHUB_REF_NAME}"
+          fi
+          VERSION="${RAW#v}"
+          if ! [[ "$VERSION" =~ ^([0-9]+)\.([0-9]+)\.([0-9]+)(-[0-9A-Za-z.]+)?$ ]]; then
+            echo "::error::Version '$RAW' is not semver (expected e.g. 1.2.0 or 1.2.0-beta.1)"; exit 1
+          fi
+          MAJOR=${BASH_REMATCH[1]}; MINOR=${BASH_REMATCH[2]}; PATCH=${BASH_REMATCH[3]}
+          # Monotonic versionCode derived from the version, so updates always go forward.
+          CODE=$(( MAJOR * 1000000 + MINOR * 1000 + PATCH ))
+          PRERELEASE=false; [ -n "${BASH_REMATCH[4]}" ] && PRERELEASE=true
+          {
+            echo "version=$VERSION"
+            echo "tag=v$VERSION"
+            echo "code=$CODE"
+            echo "prerelease=$PRERELEASE"
+          } >> "$GITHUB_OUTPUT"
+          echo "Releasing v$VERSION (versionCode $CODE, prerelease=$PRERELEASE)"
+
+      - name: Fail if the tag already exists (manual runs)
+        if: github.event_name == 'workflow_dispatch'
+        run: |
+          if git rev-parse -q --verify "refs/tags/${{ steps.version.outputs.tag }}" >/dev/null; then
+            echo "::error::Tag ${{ steps.version.outputs.tag }} already exists"; exit 1
+          fi
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "25"
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Decode signing key
+        env:
+          KEYSTORE_BASE64: ${{ secrets.TRILL_KEYSTORE_BASE64 }}
+          KEYSTORE_PASSWORD: ${{ secrets.TRILL_KEYSTORE_PASSWORD }}
+        run: |
+          if [ -z "$KEYSTORE_BASE64" ] || [ -z "$KEYSTORE_PASSWORD" ]; then
+            echo "::error::Missing TRILL_KEYSTORE_BASE64 / TRILL_KEYSTORE_PASSWORD repository secrets"; exit 1
+          fi
+          echo "$KEYSTORE_BASE64" | base64 -d > "$RUNNER_TEMP/trill-release.p12"
+          echo "TRILL_KEYSTORE_FILE=$RUNNER_TEMP/trill-release.p12" >> "$GITHUB_ENV"
+
+      - name: Build signed release APK
+        env:
+          TRILL_KEYSTORE_PASSWORD: ${{ secrets.TRILL_KEYSTORE_PASSWORD }}
+          TRILL_KEY_ALIAS: trill
+        run: |
+          chmod +x gradlew
+          ./gradlew :app:assembleRelease \
+            -Ptrill.versionName=${{ steps.version.outputs.version }} \
+            -Ptrill.versionCode=${{ steps.version.outputs.code }} \
+            --no-configuration-cache
+          mkdir -p dist
+          cp app/build/outputs/apk/release/app-release.apk "dist/trill-${{ steps.version.outputs.version }}.apk"
+          sha256sum dist/*.apk | tee dist/SHA256SUMS.txt
+
+      - name: Verify APK signature
+        run: |
+          APKSIGNER=$(ls -d "$ANDROID_HOME"/build-tools/*/ | sort -V | tail -1)apksigner
+          "$APKSIGNER" verify --print-certs "dist/trill-${{ steps.version.outputs.version }}.apk" | grep -E "Signer #1 certificate (DN|SHA-256)"
+
+      - name: Write release notes header
+        run: |
+          cat > dist/notes.md <<'EOF'
+          ## Install
+
+          - **Obtainium:** add `https://github.com/${{ github.repository }}` (or tap [Add to Obtainium](https://apps.obtainium.imranr.dev/redirect?r=obtainium://add/https://github.com/${{ github.repository }})) and it will keep Trill updated.
+          - **Manual:** download the `trill-${{ steps.version.outputs.version }}.apk` below and install it.
+
+          > Trill is an unofficial companion app and is not affiliated with Cocoon.
+          EOF
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.version.outputs.tag }}
+          target_commitish: ${{ github.sha }}
+          name: Trill ${{ steps.version.outputs.version }}
+          body_path: dist/notes.md
+          generate_release_notes: true
+          prerelease: ${{ steps.version.outputs.prerelease }}
+          make_latest: ${{ steps.version.outputs.prerelease == 'false' }}
+          files: |
+            dist/trill-${{ steps.version.outputs.version }}.apk
+            dist/SHA256SUMS.txt

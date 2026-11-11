@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  Trill glyph = trill.svg 1:1, scaled 2/3 into the 72-unit area launchers show.
+  Note heads are explicit rotated ellipses (centres computed from the SVG arcs) so Android
+  renders exactly the same geometry as browsers. Draw order as in the SVG: shadows, then
+  all white rims (they merge into one contour), then violet cores, then the waveform bars.
+-->
+<vector xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:aapt="http://schemas.android.com/aapt"
+    android:width="108dp"
+    android:height="108dp"
+    android:viewportWidth="108"
+    android:viewportHeight="108">
+    <group android:pivotX="54" android:pivotY="54" android:scaleX="0.6667" android:scaleY="0.6667"
+        android:translateX="-3.17" android:translateY="-2.8">
+        <!-- shadow -->
+        <group android:translateY="2.2">
+        <group>
+            <path android:fillColor="#383A1F8A" android:strokeColor="#383A1F8A" android:strokeWidth="9" android:strokeLineJoin="round" android:pathData="M47,38 L76,30 L76,62 L71,62 L71,41 L52,46 L52,69 L47,69 Z"></path>
+            <group android:translateX="65.763" android:translateY="63.792" android:rotation="-20">
+                <path android:fillColor="#383A1F8A" android:strokeColor="#383A1F8A" android:strokeWidth="9" android:strokeLineJoin="round" android:pathData="M-10.5,0 A10.5,8 0 1,0 10.5,0 A10.5,8 0 1,0 -10.5,0 Z"></path>
+            </group>
+            <group android:translateX="41.763" android:translateY="70.792" android:rotation="-20">
+                <path android:fillColor="#383A1F8A" android:strokeColor="#383A1F8A" android:strokeWidth="9" android:strokeLineJoin="round" android:pathData="M-10.5,0 A10.5,8 0 1,0 10.5,0 A10.5,8 0 1,0 -10.5,0 Z"></path>
+            </group>
+        </group>
+        <group>
+            <path android:fillColor="#383A1F8A" android:strokeColor="#383A1F8A" android:strokeWidth="9" android:strokeLineJoin="round" android:pathData="M58,74 h22 a6,6 0 0 1 0,12 h-22 a6,6 0 0 1 0,-12 Z"></path>
+        </group>
+        </group>
+        <!-- white rims -->
+        <group>
+            <path android:fillColor="#FFFFFFFF" android:strokeColor="#FFFFFFFF" android:strokeWidth="9" android:strokeLineJoin="round" android:pathData="M47,38 L76,30 L76,62 L71,62 L71,41 L52,46 L52,69 L47,69 Z"></path>
+            <group android:translateX="65.763" android:translateY="63.792" android:rotation="-20">
+                <path android:fillColor="#FFFFFFFF" android:strokeColor="#FFFFFFFF" android:strokeWidth="9" android:strokeLineJoin="round" android:pathData="M-10.5,0 A10.5,8 0 1,0 10.5,0 A10.5,8 0 1,0 -10.5,0 Z"></path>
+            </group>
+            <group android:translateX="41.763" android:translateY="70.792" android:rotation="-20">
+                <path android:fillColor="#FFFFFFFF" android:strokeColor="#FFFFFFFF" android:strokeWidth="9" android:strokeLineJoin="round" android:pathData="M-10.5,0 A10.5,8 0 1,0 10.5,0 A10.5,8 0 1,0 -10.5,0 Z"></path>
+            </group>
+        </group>
+        <group>
+            <path android:fillColor="#FFFFFFFF" android:strokeColor="#FFFFFFFF" android:strokeWidth="9" android:strokeLineJoin="round" android:pathData="M58,74 h22 a6,6 0 0 1 0,12 h-22 a6,6 0 0 1 0,-12 Z"></path>
+        </group>
+        <!-- violet cores: one gradient over the notes (local y 30..79), as in the SVG -->
+        <group>
+            <path  android:pathData="M47,38 L76,30 L76,62 L71,62 L71,41 L52,46 L52,69 L47,69 Z"><aapt:attr name="android:fillColor"><gradient android:type="linear" android:startX="0" android:startY="30" android:endX="0" android:endY="79" android:startColor="#FFB994FF" android:endColor="#FF8F66F0" /></aapt:attr></path>
+            <group android:translateX="65.763" android:translateY="63.792" android:rotation="-20">
+                <path  android:pathData="M-10.5,0 A10.5,8 0 1,0 10.5,0 A10.5,8 0 1,0 -10.5,0 Z"><aapt:attr name="android:fillColor"><gradient android:type="linear" android:startX="0" android:startY="-40" android:endX="0" android:endY="9" android:startColor="#FFB994FF" android:endColor="#FF8F66F0" /></aapt:attr></path>
+            </group>
+            <group android:translateX="41.763" android:translateY="70.792" android:rotation="-20">
+                <path  android:pathData="M-10.5,0 A10.5,8 0 1,0 10.5,0 A10.5,8 0 1,0 -10.5,0 Z"><aapt:attr name="android:fillColor"><gradient android:type="linear" android:startX="0" android:startY="-40" android:endX="0" android:endY="9" android:startColor="#FFB994FF" android:endColor="#FF8F66F0" /></aapt:attr></path>
+            </group>
+        </group>
+        <group>
+            <path  android:pathData="M58,74 h22 a6,6 0 0 1 0,12 h-22 a6,6 0 0 1 0,-12 Z"><aapt:attr name="android:fillColor"><gradient android:type="linear" android:startX="0" android:startY="74" android:endX="0" android:endY="86" android:startColor="#FFB994FF" android:endColor="#FF8F66F0" /></aapt:attr></path>
+        </group>
+        <group>
+            <path android:strokeColor="#FFFFFFFF" android:strokeWidth="2.4" android:strokeLineCap="round"
+                android:pathData="M62,80 L62,80.01 M66,77.5 L66,82.5 M70,76.5 L70,83.5 M74,78 L74,82 M78,79.5 L78,80.5" />
+        </group>
+    </group>
+</vector>

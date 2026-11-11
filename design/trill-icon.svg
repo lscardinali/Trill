@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 108 108" width="432" height="432">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#C9A8FF"/>
+      <stop offset="1" stop-color="#8A62EE"/>
+    </linearGradient>
+    <linearGradient id="fg" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0" stop-color="#B994FF"/>
+      <stop offset="1" stop-color="#8F66F0"/>
+    </linearGradient>
+    <clipPath id="sq"><rect x="0" y="0" width="108" height="108" rx="24"/></clipPath>
+  </defs>
+  <g clip-path="url(#sq)">
+    <rect width="108" height="108" fill="url(#bg)"/>
+    <g fill="#FFFFFF" fill-opacity="0.09">
+      <rect x="-8" y="-8" width="38" height="38" rx="8"/><rect x="35" y="-8" width="38" height="38" rx="8"/><rect x="78" y="-8" width="38" height="38" rx="8"/>
+      <rect x="-8" y="35" width="38" height="38" rx="8"/><rect x="35" y="35" width="38" height="38" rx="8"/><rect x="78" y="35" width="38" height="38" rx="8"/>
+      <rect x="-8" y="78" width="38" height="38" rx="8"/><rect x="35" y="78" width="38" height="38" rx="8"/><rect x="78" y="78" width="38" height="38" rx="8"/>
+    </g>
+  </g>
+  <g transform="translate(-4.76,-4.2)">
+  <!-- glyph -->
+  <g id="glyph">
+    <path id="notes" d="M47,38 L76,30 L76,62.5 A10.5,8 -20 1,1 71,56 L71,41 L52,46 L52,69.5 A10.5,8 -20 1,1 47,63 Z"/>
+    <path id="tag" d="M58,74 h22 a6,6 0 0 1 0,12 h-22 a6,6 0 0 1 0,-12 Z"/>
+  </g>
+  <!-- shadow -->
+  <g transform="translate(0,2.2)" fill="#3A1F8A" fill-opacity="0.22" stroke="#3A1F8A" stroke-opacity="0.22" stroke-width="9" stroke-linejoin="round">
+    <use href="#notes"/><use href="#tag"/>
+  </g>
+  <!-- white rim -->
+  <g fill="#FFFFFF" stroke="#FFFFFF" stroke-width="9" stroke-linejoin="round">
+    <use href="#notes"/><use href="#tag"/>
+  </g>
+  <!-- coloured core -->
+  <g fill="url(#fg)">
+    <use href="#notes"/><use href="#tag"/>
+  </g>
+  <!-- waveform in the tag -->
+  <g stroke="#FFFFFF" stroke-width="2.4" stroke-linecap="round">
+    <path d="M62,80 v0 M66,77.5 v5 M70,76.5 v7 M74,78 v4 M78,79.5 v1"/>
+  </g>
+  </g>
+</svg>

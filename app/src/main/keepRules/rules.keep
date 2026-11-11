@@ -1,0 +1,28 @@
+# R8 rules for Trill (AGP combines every file in src/main/keepRules).
+
+# Keep names readable in crash reports; shrinking still removes unused code.
+-dontobfuscate
+
+# --- NewPipe Extractor (YouTube search / stream resolution) -------------------------------
+# Rhino runs YouTube's player JS to decipher stream URLs and is heavily reflective.
+-keep class org.schabi.newpipe.extractor.** { *; }
+-keep class org.mozilla.javascript.** { *; }
+-keep class org.mozilla.classfile.ClassFileWriter
+-dontwarn org.mozilla.javascript.**
+-keep class javax.script.** { *; }
+-dontwarn javax.script.**
+-keep class jdk.dynalink.** { *; }
+-dontwarn jdk.dynalink.**
+-dontwarn java.beans.**
+
+# --- Networking --------------------------------------------------------------------------
+-dontwarn okhttp3.**
+-dontwarn okio.**
+-dontwarn org.conscrypt.**
+-dontwarn org.bouncycastle.**
+-dontwarn org.openjsse.**
+
+# Misc optional annotations referenced by dependencies.
+-dontwarn com.google.errorprone.annotations.**
+-dontwarn javax.annotation.**
+-dontwarn org.jspecify.annotations.**
